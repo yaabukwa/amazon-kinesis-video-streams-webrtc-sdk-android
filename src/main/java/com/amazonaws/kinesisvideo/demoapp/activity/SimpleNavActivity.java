@@ -1,6 +1,8 @@
 package com.amazonaws.kinesisvideo.demoapp.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;

@@ -37,6 +37,8 @@ import com.amazonaws.kinesisvideo.signaling.tyrus.SignalingServiceWebSocketClien
 import com.amazonaws.kinesisvideo.utils.AwsV4Signer;
 import com.amazonaws.kinesisvideo.webrtc.KinesisVideoPeerConnection;
 import com.amazonaws.kinesisvideo.webrtc.KinesisVideoSdpObserver;
+import com.neovisionaries.ws.client.WebSocket;
+import com.neovisionaries.ws.client.WebSocketFactory;
 
 import org.webrtc.AudioSource;
 import org.webrtc.AudioTrack;
@@ -72,10 +74,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.HashMap;
+import java.util.concurrent.Future;
 
 import static com.amazonaws.kinesisvideo.demoapp.fragment.StreamWebRtcConfigurationFragment.KEY_CAMERA_FRONT_FACING;
 import static com.amazonaws.kinesisvideo.demoapp.fragment.StreamWebRtcConfigurationFragment.KEY_CHANNEL_ARN;
@@ -235,6 +240,26 @@ public class WebRtcActivity extends AppCompatActivity {
             }
         };
 
+        try {
+            WebSocketFactory factory = new WebSocketFactory().setConnectionTimeout(5000);
+            WebSocket ws = factory.createSocket(wsHost);
+            ExecutorService es = Executors.newSingleThreadExecutor();
+            Future<WebSocket> future = ws.connect(es);
+
+            try
+            {
+                // Wait for the opening handshake to complete.
+                future.get();
+            }
+            catch (ExecutionException e)
+            {
+                throw e;
+            }
+
+        } catch (Exception exception) {
+            Log.e(TAG, "Client connection ");
+
+        }
 
         if (wsHost != null) {
             try {
@@ -719,7 +744,7 @@ public class WebRtcActivity extends AppCompatActivity {
         MediaConstraints sdpMediaConstraints = new MediaConstraints();
 
         sdpMediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"));
-        sdpMediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"));
+        sdpMediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveAudio", "false"));
 
         if (localPeer == null) {
 

@@ -3,10 +3,8 @@ package com.amazonaws.kinesisvideo.utils;
 import com.amazonaws.util.BinaryUtils;
 import com.amazonaws.util.DateUtils;
 import com.google.common.collect.ImmutableMap;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -20,10 +18,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
-
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-
 import static com.google.common.hash.Hashing.sha256;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.lang3.StringUtils.EMPTY;

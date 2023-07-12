@@ -4,16 +4,22 @@
     package="com.amazonaws.kinesisvideo.demoapp"
     tools:ignore="GoogleAppIndexingWarning">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
-    <uses-feature android:name="android.hardware.camera2" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera2"
+        android:required="false" />
 
     <application
         android:name="com.amazonaws.kinesisvideo.demoapp.KinesisVideoWebRtcDemoApp"
@@ -25,24 +31,35 @@
         android:fullBackupContent="@xml/backup_descriptor">
         <activity
             android:name="com.amazonaws.kinesisvideo.demoapp.activity.StartUpActivity"
-            android:label="@string/title_activity_login">
+            android:label="@string/title_activity_login"
+            android:exported="true">
 
             <!-- Make it a default activity -->
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="kvs"
+                    android:host="kvs"
+                 />
             </intent-filter>
         </activity>
         <activity
             android:name="com.amazonaws.kinesisvideo.demoapp.activity.SimpleNavActivity"
             android:label="@string/title_activity_simple_nav"
-            android:theme="@style/AppTheme">
-        </activity>
-        <activity android:name="com.amazonaws.kinesisvideo.demoapp.activity.WebRtcActivity"
+            android:theme="@style/AppTheme"></activity>
+        <activity
+            android:name="com.amazonaws.kinesisvideo.demoapp.activity.WebRtcActivity"
             android:label="@string/title_activity_webrtc"
             android:theme="@style/AppTheme"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

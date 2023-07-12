@@ -50,6 +50,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.amazonaws.kinesisvideo.demoapp.activity.StartUpActivity.KEY_DLINK_CHANNEL_NAME;
+import static com.amazonaws.kinesisvideo.demoapp.activity.StartUpActivity.KEY_DLINK_CLIENTID;
+import static com.amazonaws.kinesisvideo.demoapp.activity.StartUpActivity.KEY_DLINK_ISMASTER;
+import static com.amazonaws.kinesisvideo.demoapp.activity.StartUpActivity.KEY_DLINK_REGION;
+
 public class StreamWebRtcConfigurationFragment extends Fragment {
     private static final String TAG = StreamWebRtcConfigurationFragment.class.getSimpleName();
 
@@ -157,12 +162,38 @@ public class StreamWebRtcConfigurationFragment extends Fragment {
 
         mCameras = view.findViewById(R.id.camera_spinner);
 
-        List<String> cameraList = new ArrayList<>(Arrays.asList("Front Camera", "Back Camera"));
+        // Intel Instrumentation - swap cameras
+        // List<String> cameraList = new ArrayList<>(Arrays.asList("Front Camera", "Back Camera"));
+        List<String> cameraList = new ArrayList<>(Arrays.asList("Back Camera", "Front Camera"));
 
         if (getContext() != null) {
             mCameras.setAdapter(new ArrayAdapter<>(getContext(),
                     android.R.layout.simple_spinner_dropdown_item,
                     cameraList));
+        }
+
+        try {
+            // Handle deep linking parameters
+            Bundle bundle = requireActivity().getIntent().getExtras();
+            if (bundle.getString(KEY_DLINK_CHANNEL_NAME, null) != null) {
+                mChannelName.setText(bundle.getString(KEY_DLINK_CHANNEL_NAME, null));
+                Log.i(TAG, "[DEEPLINK] Channel: " + mChannelName.getText());
+                mRegion.setText(bundle.getString(KEY_DLINK_REGION, null));
+                Log.i(TAG, "[DEEPLINK] Region: " + mRegion.getText());
+                mClientId.setText(bundle.getString(KEY_DLINK_CLIENTID, ""));
+                Log.i(TAG, "[DEEPLINK] ClientId: " + mClientId.getText());
+                boolean isMaster = bundle.getBoolean(KEY_DLINK_ISMASTER, false);
+                Log.i(TAG, "[DEEPLINK] IsMaster: " + Boolean.toString(isMaster));
+                if (isMaster) {
+                    Log.i(TAG, "[DEEPLINK] Starting as master...");
+                    startMasterActivity();
+                } else {
+                    Log.i(TAG, "[DEEPLINK] Starting as viewer...");
+                    startViewerActivity();
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "[DEEPLINK] Exception while executing deeplinking.", e);
         }
     }
 

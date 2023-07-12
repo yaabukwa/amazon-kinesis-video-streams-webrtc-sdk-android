@@ -6,14 +6,11 @@ import com.amazonaws.kinesisvideo.signaling.SignalingListener;
 
 import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
-
 import javax.websocket.ClientEndpointConfig;
 import javax.websocket.CloseReason;
 import javax.websocket.DeploymentException;
@@ -68,23 +65,15 @@ class WebSocketClient {
 
         };
 
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    session = clientManager.connectToServer(endpoint, cec, new URI(uri));
-                } catch (final DeploymentException | IOException | URISyntaxException e) {
-                    signalingListener.onException(e);
-                }
+        executorService.submit(() -> {
+            try {
+                session = clientManager.connectToServer(endpoint, cec, new URI(uri));
+            } catch (final DeploymentException | IOException | URISyntaxException e) {
+                signalingListener.onException(e);
             }
         });
 
-        await().atMost(10, TimeUnit.SECONDS).until(new Callable<Boolean>() {
-            @Override
-            public Boolean call() {
-                return WebSocketClient.this.isOpen();
-            }
-        });
+        await().atMost(10, TimeUnit.SECONDS).until(WebSocketClient.this::isOpen);
     }
 
     boolean isOpen() {

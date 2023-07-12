@@ -1,6 +1,4 @@
 # Amazon Kinesis Video Streams Android WebRTC SDK
-[![Build Status](https://travis-ci.org/awslabs/amazon-kinesis-video-streams-webrtc-sdk-android.svg?branch=master)](https://travis-ci.org/awslabs/amazon-kinesis-video-streams-webrtc-sdk-android)
-[![Coverage Status](https://codecov.io/gh/awslabs/amazon-kinesis-video-streams-webrtc-sdk-android/branch/master/graph/badge.svg)](https://codecov.io/gh/awslabs/amazon-kinesis-video-streams-webrtc-sdk-android)
 
 ## Running KinesisVideoWebRTCDempApp Sample
 
@@ -122,6 +120,32 @@ Once login is successful, you will entering the following channel information to
   * Start one Android device in `master` mode for starting a new session.
   * Start the web browser using the [Javascript SDK](https://github.com/awslabs/amazon-kinesis-video-streams-webrtc-sdk-js) and start it as `viewer`.
   * Verify media showing up from the Android device to the browser.
+
+### Intel: Testing with ADB deep linking
+
+1. Place `awsconfiguration.json` in `src/main/res/raw` folder
+2. Build the application and install it to device (or emulator)
+3. You need to run the app manually at least once and perform login.
+
+Then you can use deep-linking to start the app from a script and point it to a region/channel
+
+Required parameters:
+- `region`: AWS reqion
+- `channel`: Channel name
+- `role`: [`master`|`viewer`]
+
+Optional parameter:
+- `clientid`
+
+If one device is connected..
+```
+adb.exe shell 'am start -W -a android.intent.action.VIEW -d "kvs://kvs?region=eu-central-1&channel=test&role=master&clientid=123"'
+```
+
+Target a specific device or eumulator
+```
+adb.exe -s emulator-5554 shell 'am start -W -a android.intent.action.VIEW -d "kvs://kvs?region=eu-central-1&channel=test&role=master&clientid=123"'
+```
 
 ## License
 
